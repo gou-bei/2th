@@ -1,26 +1,37 @@
-import requests
-url = "https://news.hqu.edu.cn/hdyw.htm"
-r = requests.get(url)
-r.encoding = "utf-8"
-from bs4 import BeautifulSoup
-soup = BeautifulSoup(r.text)
-list_url = []
-list_title = []
-for i in range(1,10):
-    news_id = "line_u11_" + str(i)
-    news_url = "https://news.hqu.edu.cn/" + soup.select(f"li[id = {news_id} ] a")[0].get("href")
-    title = soup.select(f"li[id= {news_id} ] h3")[0].get_text()
-    list_url.append(news_url)
-    list_title.append(title)
 from flask import Flask, render_template
-
+import pymysql
+pymysql.install_as_MySQLdb()
 app = Flask(__name__)
+
+conn = pymysql.Connect(
+        host = '127.0.0.1',
+        port = 3306,
+        user = 'root',
+        passwd = '78gxtw23.ysq',
+        db = 'hdxw',
+        charset = 'utf8')
+
+cursor = conn.cursor()
+sql = "select * from news"
+cursor.execute(sql)
+results = cursor.fetchall()
+
+list_title = []
+list_url = []
+
+for row in results:
+    title = row[0]
+    url = row[1]
+    list_title.append(title)
+    list_url.append(url)
+cursor.close()
+conn.close()
 
 @app.route('/hdxw')
 def index():
     title = list_title
     url = list_url
-    return render_template('test.html',
+    return render_template('index.html',
                            title = title,
                            url = url)
 if __name__ == '__main__':
