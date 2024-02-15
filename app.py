@@ -27,7 +27,7 @@ for row in results:
 cursor.close()
 conn.close()
 
-@app.route('/hdxw')
+@app.route('/')
 def index():
     title = list_title
     url = list_url
@@ -35,4 +35,4 @@ def index():
                            title = title,
                            url = url)
 if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+    app.run(host="127.0.0.1")
