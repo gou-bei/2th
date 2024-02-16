@@ -3,15 +3,9 @@ import pymysql
 pymysql.install_as_MySQLdb()
 app = Flask(__name__)
 
-conn = pymysql.Connect(
-        host = '127.0.0.1',
-        port = 3306,
-        user = 'root',
-        passwd = '78gxtw23.ysq',
-        db = 'hdxw',
-        charset = 'utf8')
+db = pymysql.connect(user = "root",password = "78gxtw23.ysq",database = "hdxw",charset = "utf8")
 
-cursor = conn.cursor()
+cursor = db.cursor()
 sql = "select * from news"
 cursor.execute(sql)
 results = cursor.fetchall()
@@ -25,7 +19,7 @@ for row in results:
     list_title.append(title)
     list_url.append(url)
 cursor.close()
-conn.close()
+db.close()
 
 @app.route('/')
 def index():
